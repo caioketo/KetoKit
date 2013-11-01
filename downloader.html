@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <title>KetKit</title>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+  </head>
+  <body>
+      <div id="addProduto">
+          <label for="codigo">Youtube Url:</label>
+          <input type="text" name="txtUrl" id="txtUrl" />
+          <br />
+          <label for="descricao">Nome Arquivo:</label>
+          <input type="text" name="txtArq" id="txtArq" />
+          <br />
+          <input type="submit" value="Baixar" />
+      </div>
+      <div id="lista">
+          <ul id="ulLista"></ul>
+      </div>
+  </body>
+    <script type="text/javascript">
+        $(function () {
+            $("input[type=submit], a, button")
+              .button()
+              .click(function (event) {
+                  event.preventDefault();
+                  var txtUrl = document.getElementById("txtUrl");
+                  var txtArq = document.getElementById("txtArq");
+                  $.ajax({
+                      url: "./downloader",
+                      type: "post",
+                      datatype: 'json',
+                      data: {
+                          url: txtUrl.value,
+                          arq: txtArq.value
+                      },
+                      success: function (response) {
+                          alert('Baixando...');
+                      },
+                      error: function (textStatus) {
+                          alert("error: " + textStatus);
+                      },
+                  });
+              });
+        });
+    </script>
+</html>

@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <title>KetKit</title>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+  </head>
+  <body>
+      <div id="lista">
+          <ul id="ulLista"></ul>
+      </div>
+  </body>
+    <script type="text/javascript">
+        function atualizarLista() {
+            $.ajax({
+                url: "./canais",
+                type: "get",
+                datatype: 'json',
+                success: function (response) {
+                    var listaCont = document.getElementById('lista');
+                    var listElement = document.getElementById("ulLista");
+                    $('#ulLista > li').remove();
+                    listaCont.appendChild(listElement);
+                    var numberOfListItems = response.length;
+
+                    for (var i = 0 ; i < numberOfListItems ; ++i) {
+                        // create a <li> for each one.
+                        var listItem = document.createElement("li");
+                        // add the item text
+                        console.log(response[i]);
+                        listItem.id = response[i].numero;
+                        listItem.innerHTML = response[i].canal;
+                        // add listItem to the listElement
+                        listElement.appendChild(listItem);
+
+                    }
+                },
+                error: function (textStatus) {
+                    alert("error: " + textStatus);
+                },
+            });
+        }
+
+        atualizarLista();
+    </script>
+</html>

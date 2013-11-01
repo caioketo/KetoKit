@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <title>KetKit</title>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+  </head>
+  <body>
+      <div id="addProduto">
+          <label for="codigo">Código:</label>
+          <input type="text" name="txtCodigo" id="txtCodigo" />
+          <br />
+          <label for="descricao">Descrição:</label>
+          <input type="text" name="txtDescricao" id="txtDescricao" />
+          <br />
+          <label for="quantidade">Quantidade:</label>
+          <input type="number" name="txtQuantidade" id="txtQuantidade" />
+          <br />
+          <input type="submit" value="Adicionar" />
+      </div>
+      <div id="lista">
+          <ul id="ulLista"></ul>
+      </div>
+  </body>
+    <script type="text/javascript">
+        $(function () {
+            $("input[type=submit], a, button")
+              .button()
+              .click(function (event) {
+                  event.preventDefault();
+                  var txtCodigo = document.getElementById("txtCodigo");
+                  var txtDescricao = document.getElementById("txtDescricao");
+                  var txtQuantidade = document.getElementById("txtQuantidade");
+                  $.ajax({
+                      url: "./produtos",
+                      type: "post",
+                      datatype: 'json',
+                      data: {
+                          codigo: txtCodigo.value,
+                          descricao: txtDescricao.value,
+                          quantidade: txtQuantidade.value
+                      },
+                      success: function (response) {
+                          atualizarLista();
+                      },
+                      error: function (textStatus) {
+                          alert("error: " + textStatus);
+                      },
+                  });
+              });
+        });
+
+        function atualizarLista() {
+            $.ajax({
+                url: "./produtos",
+                type: "get",
+                datatype: 'json',
+                success: function (response) {
+                    var listaCont = document.getElementById('lista');
+                    var listElement = document.getElementById("ulLista");
+                    $('#ulLista > li').remove();
+                    listaCont.appendChild(listElement);
+                    var numberOfListItems = response.length;
+
+                    for (var i = 0 ; i < numberOfListItems ; ++i) {
+                        // create a <li> for each one.
+                        var listItem = document.createElement("li");
+                        // add the item text
+                        console.log(response[i]);
+                        listItem.innerHTML = 'Codigo: ' + response[i].codigo + ' Descricao: ' + response[i].descricao + ' Qtd: ' + response[i].quantidade;
+                        // add listItem to the listElement
+                        listElement.appendChild(listItem);
+
+                    }
+                },
+                error: function (textStatus) {
+                    alert("error: " + textStatus);
+                },
+            });
+        }
+        atualizarLista();
+    </script>
+</html>
