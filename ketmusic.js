@@ -4,7 +4,7 @@ var restler = require('restler');
 
 module.exports = KetMusic;
 
-function KetMusic() {
+function KetMusic(app) {
     this.googleAuth = new GoogleClientLogin({
         email: 'caionmoreno1@gmail.com',
         password: 'vd001989',
@@ -14,9 +14,23 @@ function KetMusic() {
     this.loggedIn = false;
     this.songs = [];
     this.playlists = [];
+    this.app = app;
+    this.CreateServer();
 };
 
 KetMusic.prototype = {
+    CreateServer: function () {
+        var self = this;
+        self.app.get('/musicas', function (req, res) {
+            res.writeHead(200, { 'Content-Type': 'text/json' });
+            res.end(JSON.stringify(self.songs));
+        });
+
+        self.app.get('/playlists', function (req, res) {
+            res.writeHead(200, { 'Content-Type': 'text/json' });
+            res.end(JSON.stringify(self.playlists));
+        });
+    },
     Login: function (cb) {
         var self = this;
         self.googleAuth.on(GoogleClientLogin.events.login, function () {
@@ -27,7 +41,7 @@ KetMusic.prototype = {
                 }
             });
         });
-        this.googleAuth.login();
+        self.googleAuth.login();
     },
     LoadSongs: function (cb) {
         var self = this;
@@ -50,7 +64,12 @@ KetMusic.prototype = {
             catch (e) {}
         });
     },
-    LoadPlaylists: function () {
+    LoadPlaylists: function (cb) {
+        var self = this;
+        self.GetPlaylist("All", function (result) {
+            console.log(result);
+            cb();
+        });
     },
     GetSongURL: function (songId, callback) {
         return this._sendRequest('post', 'https://play.google.com/music/play?u=0&songid=' + songId + '&pt=e', null, null, callback);

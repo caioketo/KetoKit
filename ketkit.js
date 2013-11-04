@@ -11,16 +11,18 @@ var port = 7575;
 var upgraded = false;
 var NA = require('nodealytics');
 var KetMusic = require('./ketmusic');
-var ketmusic = new KetMusic();
-var KetPlayer = require('./ketplayer');
-var ketplayer = new KetPlayer(ketmusic);
+var ketmusic = new KetMusic(app);
+//var KetPlayer = require('./ketplayer');
+//var ketplayer = new KetPlayer(ketmusic);
 var ketdownloader = require('./ketdownloader')
 var KetController = require('./ketcontroller')
 var ketcontroller = new KetController();
 
 ketmusic.Login(function () {
     ketmusic.LoadSongs(function () {
-        //ketplayer.playSong(ketmusic.songs[0]);
+        ketmusic.LoadPlaylists(function () {
+            //ketplayer.playSong(ketmusic.songs[0]);
+        });
     });
 });
 
@@ -173,3 +175,4 @@ function fireEvent(category, action, label) {
 
 app.listen(port);
 console.log('Listening at http://jangadaserver.no-ip.info:' + port)
+
